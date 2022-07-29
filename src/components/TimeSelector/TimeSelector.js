@@ -1,16 +1,25 @@
 import styled from "styled-components";
+import Footer from "../Footer/Footer";
+import { Link, useParams } from "react-router-dom";
 
-export default function TimeSelector({testvalue}) {
+export default function TimeSelector({idParams, testvalue, posterURL}) {
+    const {id1} = useParams();
+    
+    console.log('id1' + id1);
+    console.log('id: ' + idParams);
+    console.log('posterURL: ' + posterURL);
+    console.log('testvalue: ' + testvalue);
     return(
         <>
             <SelecioneOHorario>Selecione o horário</SelecioneOHorario>
             <Schedule>
                 <Day>Quinta-feira - 24/06/2021</Day>
                 <Time>
-                    <p>15:00</p>
+                <Link to={`/SeatSelector`} ><p>15:00</p></Link>
                     <p>19:00</p>
                 </Time>
             </Schedule>
+        <Footer />
         </>
     );
 }
@@ -65,8 +74,8 @@ const Time = styled.div`
     color: #FFFFFF;
     }
 
-    p:hover {
-        background-color: black;
-    }
+    &:hover {
+    filter: brightness(0.9);
+  }
 `;
 

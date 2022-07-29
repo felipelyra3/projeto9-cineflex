@@ -5,12 +5,11 @@ import loadingCat from "../../assets/images/reload-cat.gif"
 import TimeSelector from '../TimeSelector/TimeSelector';
 import { Link, useParams } from "react-router-dom";
 
-function MovieSelectorJSX({ posterURL, imageId, key }) {
-    console.log('Key = ' + key);
-    console.log('Imageid = ' + imageId);
+function MovieSelectorJSX({ posterURL, id }) {
+    const {idParams} = useParams();
     return (
         <>
-            <Link to={`/TimeSelector/${key + 1}`} params={{ testvalue: "hello" }} ><Img src={posterURL} alt='poster' /></Link>
+            <Link to={`/TimeSelector/${id}`} idParams={idParams ? Number.parseInt(idParams) : null} params={{ testvalue: "hello" }} posterURL={posterURL} ><Img src={posterURL} alt='poster' /></Link>
         </>
     );
 }
@@ -33,7 +32,7 @@ export default function MovieSelector() {
         <>
             <SelecioneOFilme>Selecione o filme</SelecioneOFilme>
             {request ? (
-                request.map((request, key) => (<MovieSelectorJSX key={key} posterURL={request.posterURL} imageId={imageId} />))
+                request.map((request, index) => (<MovieSelectorJSX key={index} id={request.id} posterURL={request.posterURL} imageId={imageId} />))
             ) : (
                 <Loading>
                     <img src={loadingCat} alt="loading" />
