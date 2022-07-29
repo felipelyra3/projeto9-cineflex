@@ -1,26 +1,57 @@
 import styled from "styled-components";
 import Footer from "../Footer/Footer";
 import { Link, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import axios from 'axios';
+import loadingCat from "../../assets/images/reload-cat.gif";
 
-function SeatSelectorJSX() {
+function SeatSelectorJSX({ name, isAvailable }) {
+    let txt = '';
+    if (isAvailable === true) {
+        txt = 'circle';
+    } else if (isAvailable === false) {
+        txt = 'circle unavailable';
+    }
+
     return (
-        <ContainerCircle>
-            <Circle>01</Circle>
-        </ContainerCircle>
+
+        <div className={txt}>{name}</div>
     );
 }
 
 export default function SeatSelector() {
+    const [request, setRequest] = useState('');
+    const { imageId } = useParams();
+
+    useEffect(() => {
+        const promise = axios.get(`https://mock-api.driven.com.br/api/v7/cineflex/showtimes/${imageId}/seats`);
+
+        promise.then((request) => {
+            setRequest(request.data);
+            console.log(request.data);
+        });
+    }, []);
+
+
     return (
-        <>
+        <Page>
             <SelecioneOAssento>Selecione o(s) assento(s)</SelecioneOAssento>
 
-            <SeatSelectorJSX />
+            <ContainerCircle>
+                {request ? (
+                    request.seats.map((seats, index) => (<SeatSelectorJSX key={index} id={seats.id} name={seats.name} isAvailable={seats.isAvailable} />))
+                ) : (
+                    <Loading>
+                        <img src={loadingCat} alt="loading" />
+                    </Loading>
+                )
+                }
+            </ContainerCircle>
 
             <DisplayInfo>
-                <Selected><box></box><p>Selecionado</p></Selected>
-                <Available><box></box><p>Disponível</p></Available>
-                <Unavailable><box></box><p>Indisponível</p></Unavailable>
+                <Selected><div className="box"></div><p>Selecionado</p></Selected>
+                <Available><div className="box"></div><p>Disponível</p></Available>
+                <Unavailable><div className="box"></div><p>Indisponível</p></Unavailable>
             </DisplayInfo>
 
             <Form>
@@ -35,10 +66,24 @@ export default function SeatSelector() {
                 </form>
             </Form>
 
-            <Footer />
-        </>
+            {request ? (
+                <Footer posterURL={request.movie.posterURL} title={request.movie.title} time={request.name} weekday={request.day.weekday} />
+            ) : (
+                <Loading>
+                    <img src={loadingCat} alt="loading" />
+                </Loading>
+            )
+            }
+
+
+        </Page>
     );
 }
+
+const Page = styled.div`
+    width: 90vw;
+    margin: 70px auto 150px auto;
+`;
 
 const SelecioneOAssento = styled.div`
     margin: 12px 0px 0px 0px;
@@ -67,7 +112,7 @@ const Selected = styled.div`
         padding: 30px 0px 0px 0px;
     }
 
-    box {
+    .box {
         box-sizing: border-box;
         position: absolute;
         width: 25px;
@@ -86,7 +131,7 @@ const Available = styled.div`
         padding: 30px 0px 0px 0px;
     }
 
-box {
+.box {
         box-sizing: border-box;
         position: absolute;
         width: 25px;
@@ -105,7 +150,7 @@ const Unavailable = styled.div`
         padding: 30px 0px 0px 0px;
     }
 
-box {
+.box {
         box-sizing: border-box;
         position: absolute;
         width: 25px;
@@ -117,6 +162,8 @@ box {
 `;
 
 const Form = styled.div`
+    display: flex;
+    justify-content: center;
     margin: 50px 0px 0px 24px;
 
     label {
@@ -172,10 +219,14 @@ const Button = styled.div`
 `;
 
 const ContainerCircle = styled.div`
-    margin: 31px;
-`;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    max-width: 340px;
+    margin: 0px auto;
+    padding: 12px;
 
-const Circle = styled.div`
+    .circle {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -194,9 +245,29 @@ const Circle = styled.div`
     text-align: center;
     letter-spacing: 0.04em;
     color: #000000;
+    margin: 9px 3px 9px 3px;
+    }
 
-    &:hover {
+    circle:hover {
         background-color: #445a6c;
         color: white;
+    }
+
+    .unavailable {
+        background-color: #FBE192;;
+    }
+
+`;
+
+const Loading = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    
+    img {
+    width: 129px;
+    height: 193px;
+    margin: 38px;
     }
 `;

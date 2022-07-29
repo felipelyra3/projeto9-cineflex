@@ -1,12 +1,12 @@
 import styled from "styled-components";
 
-export default function Footer({ posterURL, title, time }) {
+export default function Footer({ posterURL, title, time, weekday }) {
     return (
         <ContainerFooter>
             <ContainerImg><img src={posterURL} alt='poster' /></ContainerImg>
             <Text>
                 <p>{title}</p>
-                <p>{time}</p>
+                {weekday && time ? <p>{weekday} - {time}</p> : <></>}
             </Text>
         </ContainerFooter>
     );

@@ -7,19 +7,19 @@ import SeatSelector from '../SeatSelector/SeatSelector';
 import Success from '../Success/Success';
 
 export default function App() {
-    return(
+    return (
         <div className='page'>
-        <BrowserRouter>
-			{/* Tudo que tiver uma rota entre Routes */}
-            <Header />
-			<Routes>
-				{/* Cada rota tem que estar em Route */}
-				<Route path="/" element={<MovieSelector />} />
-                <Route path="/TimeSelector/:imageId" element={<TimeSelector />} />
-                <Route path="/SeatSelector" element={<SeatSelector />} />
-                <Route path="/Success" element={<Success />} />
-			</Routes>
-		</BrowserRouter>
+            <BrowserRouter>
+                {/* Tudo que tiver uma rota entre Routes */}
+                <Header />
+                <Routes>
+                    {/* Cada rota tem que estar em Route */}
+                    <Route path="/" element={<MovieSelector />} />
+                    <Route path="/TimeSelector/:imageId" element={<TimeSelector />} />
+                    <Route path="/SeatSelector/:imageId" element={<SeatSelector />} />
+                    <Route path="/Success" element={<Success />} />
+                </Routes>
+            </BrowserRouter>
         </div>
 
     );

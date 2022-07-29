@@ -3,24 +3,24 @@ import Footer from "../Footer/Footer";
 import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from 'axios';
-import loadingCat from "../../assets/images/reload-cat.gif"
+import loadingCat from "../../assets/images/reload-cat.gif";
 import MovieSelector from "../MovieSelector/MovieSelector";
 
-function TimeJSX({ name }) {
+function TimeJSX({ name, imageId }) {
     return (
-        <Link to={`/SeatSelector`} >
+        <Link to={`/SeatSelector/${imageId}`} >
             <Time>{name}</Time>
         </Link>
     );
 }
 
-function TimerSelectorJSX({ day }) {
+function TimerSelectorJSX({ day, imageId }) {
     return (
         <>
             <Schedule>
                 <Day>{day.weekday} - {day.date}</Day>
                 <ContainerTime>
-                    {day.showtimes.map((time, index) => (<TimeJSX key={index} name={time.name} />))}
+                    {day.showtimes.map((time, index) => (<TimeJSX key={index} name={time.name} imageId={imageId} />))}
                 </ContainerTime>
             </Schedule>
         </>
@@ -37,7 +37,7 @@ export default function TimeSelector() {
         promise.then((request) => {
             setRequest(request.data);
             console.log(request);
-        })
+        });
     }, []);
 
 
@@ -45,7 +45,7 @@ export default function TimeSelector() {
         <>
             <SelecioneOHorario>Selecione o horário</SelecioneOHorario>
             {request ? (
-                request.days.map((day, index) => (<TimerSelectorJSX key={index} day={day} />))
+                request.days.map((day, index) => (<TimerSelectorJSX key={index} day={day} imageId={imageId} />))
             ) : (
                 <Loading>
                     <img src={loadingCat} alt="loading" />
