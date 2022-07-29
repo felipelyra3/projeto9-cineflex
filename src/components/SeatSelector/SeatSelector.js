@@ -2,11 +2,20 @@ import styled from "styled-components";
 import Footer from "../Footer/Footer";
 import { Link, useParams } from "react-router-dom";
 
+function SeatSelectorJSX() {
+    return (
+        <ContainerCircle>
+            <Circle>01</Circle>
+        </ContainerCircle>
+    );
+}
+
 export default function SeatSelector() {
     return (
         <>
             <SelecioneOAssento>Selecione o(s) assento(s)</SelecioneOAssento>
 
+            <SeatSelectorJSX />
 
             <DisplayInfo>
                 <Selected><box></box><p>Selecionado</p></Selected>
@@ -160,4 +169,34 @@ const Button = styled.div`
     text-align: center;
     letter-spacing: 0.04em;
     color: #FFFFFF;
+`;
+
+const ContainerCircle = styled.div`
+    margin: 31px;
+`;
+
+const Circle = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 26px;
+    height: 26px;
+    background: #C3CFD9;
+    border: 1px solid #808F9D;
+    border-radius: 12px;
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 11px;
+    line-height: 13px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    letter-spacing: 0.04em;
+    color: #000000;
+
+    &:hover {
+        background-color: #445a6c;
+        color: white;
+    }
 `;

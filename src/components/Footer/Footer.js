@@ -1,12 +1,12 @@
 import styled from "styled-components";
 
-export default function Footer() {
-    return(
+export default function Footer({ posterURL, title, time }) {
+    return (
         <ContainerFooter>
-            <ContainerImg><img src="https://1.bp.blogspot.com/-TuEyXXGBYvk/YEJi3Pt2vAI/AAAAAAAABNo/2QM4jERDTbI9QeCuyzn22nJq8lDUlAcFACLcBGAsYHQ/w630-h640/Sakura%2BKinomoto.jpg" alt='poster' /></ContainerImg>
+            <ContainerImg><img src={posterURL} alt='poster' /></ContainerImg>
             <Text>
-                <p>Title</p>
-                <p>Quinta-feira - 15:00</p>
+                <p>{title}</p>
+                <p>{time}</p>
             </Text>
         </ContainerFooter>
     );

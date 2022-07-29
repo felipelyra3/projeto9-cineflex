@@ -2,15 +2,14 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import styled from "styled-components";
 import loadingCat from "../../assets/images/reload-cat.gif"
-import TimeSelector from '../TimeSelector/TimeSelector';
 import { Link, useParams } from "react-router-dom";
 
 function MovieSelectorJSX({ posterURL, id }) {
-    const {idParams} = useParams();
+    const { imageId } = useParams();
     return (
-        <>
-            <Link to={`/TimeSelector/${id}`} idParams={idParams ? Number.parseInt(idParams) : null} params={{ testvalue: "hello" }} posterURL={posterURL} ><Img src={posterURL} alt='poster' /></Link>
-        </>
+        <Link to={`/TimeSelector/${id}`} >
+            <Img src={posterURL} alt='poster' />
+        </Link>
     );
 }
 

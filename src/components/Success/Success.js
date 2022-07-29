@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { Link, useParams } from "react-router-dom";
 
 export default function Success() {
-    return(
+    return (
         <>
             <PedidoFeitoComSucesso>Pedido feito<br />com sucesso!</PedidoFeitoComSucesso>
             <MovieSession>

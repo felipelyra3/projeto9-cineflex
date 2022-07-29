@@ -1,25 +1,59 @@
 import styled from "styled-components";
 import Footer from "../Footer/Footer";
 import { Link, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import axios from 'axios';
+import loadingCat from "../../assets/images/reload-cat.gif"
+import MovieSelector from "../MovieSelector/MovieSelector";
 
-export default function TimeSelector({idParams, testvalue, posterURL}) {
-    const {id1} = useParams();
-    
-    console.log('id1' + id1);
-    console.log('id: ' + idParams);
-    console.log('posterURL: ' + posterURL);
-    console.log('testvalue: ' + testvalue);
-    return(
+function TimeJSX({ name }) {
+    return (
+        <Link to={`/SeatSelector`} >
+            <Time>{name}</Time>
+        </Link>
+    );
+}
+
+function TimerSelectorJSX({ day }) {
+    return (
+        <>
+            <Schedule>
+                <Day>{day.weekday} - {day.date}</Day>
+                <ContainerTime>
+                    {day.showtimes.map((time, index) => (<TimeJSX key={index} name={time.name} />))}
+                </ContainerTime>
+            </Schedule>
+        </>
+    );
+}
+
+export default function TimeSelector() {
+    const [request, setRequest] = useState('');
+    const { imageId } = useParams();
+
+    useEffect(() => {
+        const promise = axios.get(`https://mock-api.driven.com.br/api/v7/cineflex/movies/${imageId}/showtimes`);
+
+        promise.then((request) => {
+            setRequest(request.data);
+            console.log(request);
+        })
+    }, []);
+
+
+    return (
         <>
             <SelecioneOHorario>Selecione o horário</SelecioneOHorario>
-            <Schedule>
-                <Day>Quinta-feira - 24/06/2021</Day>
-                <Time>
-                <Link to={`/SeatSelector`} ><p>15:00</p></Link>
-                    <p>19:00</p>
-                </Time>
-            </Schedule>
-        <Footer />
+            {request ? (
+                request.days.map((day, index) => (<TimerSelectorJSX key={index} day={day} />))
+            ) : (
+                <Loading>
+                    <img src={loadingCat} alt="loading" />
+                </Loading>
+            )
+            }
+
+            <Footer posterURL={request.posterURL} title={request.title} />
         </>
     );
 }
@@ -53,10 +87,11 @@ const Day = styled.div`
     margin: 12px 0px 20px 0px;
 `;
 
-const Time = styled.div`
+const ContainerTime = styled.ul`
     display: flex;
+`;
 
-    p {
+const Time = styled.li`
     display: flex;
     justify-content: center;
     align-items: center;
@@ -72,10 +107,23 @@ const Time = styled.div`
     line-height: 21px;
     letter-spacing: 0.02em;
     color: #FFFFFF;
-    }
+
 
     &:hover {
-    filter: brightness(0.9);
-  }
+        background-color: green;
+    }
+`;
+
+const Loading = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    
+    img {
+    width: 129px;
+    height: 193px;
+    margin: 38px;
+    }
 `;
 
