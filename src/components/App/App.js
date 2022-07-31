@@ -16,7 +16,7 @@ export default function App() {
                     {/* Cada rota tem que estar em Route */}
                     <Route path="/" element={<MovieSelector />} />
                     <Route path="/TimeSelector/:imageId" element={<TimeSelector />} />
-                    <Route path="/SeatSelector/:imageId" element={<SeatSelector />} />
+                    <Route path="/SeatSelector/:timeId" element={<SeatSelector />} />
                     <Route path="/Success" element={<Success />} />
                 </Routes>
             </BrowserRouter>

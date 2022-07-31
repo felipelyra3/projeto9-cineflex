@@ -6,21 +6,21 @@ import axios from 'axios';
 import loadingCat from "../../assets/images/reload-cat.gif";
 import MovieSelector from "../MovieSelector/MovieSelector";
 
-function TimeJSX({ name, imageId }) {
+function TimeJSX({ name, id }) {
     return (
-        <Link to={`/SeatSelector/${imageId}`} >
+        <Link to={`/SeatSelector/${id}`} >
             <Time>{name}</Time>
         </Link>
     );
 }
 
-function TimerSelectorJSX({ day, imageId }) {
+function TimerSelectorJSX({ day }) {
     return (
         <>
             <Schedule>
                 <Day>{day.weekday} - {day.date}</Day>
                 <ContainerTime>
-                    {day.showtimes.map((time, index) => (<TimeJSX key={index} name={time.name} imageId={imageId} />))}
+                    {day.showtimes.map((time, index) => (<TimeJSX key={index} name={time.name} id={time.id} />))}
                 </ContainerTime>
             </Schedule>
         </>
@@ -45,7 +45,7 @@ export default function TimeSelector() {
         <>
             <SelecioneOHorario>Selecione o horário</SelecioneOHorario>
             {request ? (
-                request.days.map((day, index) => (<TimerSelectorJSX key={index} day={day} imageId={imageId} />))
+                request.days.map((day, index) => (<TimerSelectorJSX key={index} day={day} />))
             ) : (
                 <Loading>
                     <img src={loadingCat} alt="loading" />

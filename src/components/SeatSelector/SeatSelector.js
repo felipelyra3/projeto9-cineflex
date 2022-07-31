@@ -1,36 +1,88 @@
 import styled from "styled-components";
 import Footer from "../Footer/Footer";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from 'axios';
 import loadingCat from "../../assets/images/reload-cat.gif";
 
-function SeatSelectorJSX({ name, isAvailable }) {
-    let txt = '';
-    if (isAvailable === true) {
-        txt = 'circle';
+function SeatSelectorJSX({ name, isAvailable, id, allSelected, setAllSelected }) {
+    const [selected, setSelected] = useState(false);
+    let txt = 'circle';
+    if (isAvailable === true && selected === true) {
+        txt += ' selected';
     } else if (isAvailable === false) {
-        txt = 'circle unavailable';
+        txt += ' unavailable'
+    }
+
+    function seatAvailable() {
+        setSelected(!selected);
+
+        if (allSelected.includes(id) === true) {
+            let aux = [...allSelected];
+            for (let i = 0; i < allSelected.length; i++) {
+                if (id === allSelected[i]) {
+                    aux.splice(i, 1);
+                    setAllSelected([...aux]);
+                }
+            }
+        } else {
+            setAllSelected([...allSelected, id]);
+        }
+
     }
 
     return (
 
-        <div className={txt}>{name}</div>
+        <div className={txt} onClick={isAvailable ? (seatAvailable) : (() => { alert('Esse assento não está disponível') })}>{name}</div>
     );
 }
 
 export default function SeatSelector() {
     const [request, setRequest] = useState('');
-    const { imageId } = useParams();
+    const { timeId } = useParams();
+    const [allSelected, setAllSelected] = useState([]);
+    const [name, setName] = useState('');
+    const [CPF, setCPF] = useState('');
+    const navigate = useNavigate();
 
     useEffect(() => {
-        const promise = axios.get(`https://mock-api.driven.com.br/api/v7/cineflex/showtimes/${imageId}/seats`);
+        const promise = axios.get(`https://mock-api.driven.com.br/api/v7/cineflex/showtimes/${timeId}/seats`);
 
         promise.then((request) => {
             setRequest(request.data);
             console.log(request.data);
         });
     }, []);
+
+    function handleForm(e) {
+        e.preventDefault();
+        const body = {
+            ids: allSelected,
+            name: name,
+            cpf: CPF
+        }
+
+        const obj = {
+            title: request.movie.title,
+            date: request.day.date,
+            time: request.name,
+            seats: allSelected,
+            name: name,
+            CPF: CPF
+        }
+
+        const post = axios.post('https://mock-api.driven.com.br/api/v7/cineflex/seats/book-many', body);
+
+        post.then(() => {
+            console.log(obj);
+            navigate('/Success', { state: obj });
+        });
+
+        post.catch((error) => {
+            console.log(error);
+        })
+
+    }
 
 
     return (
@@ -39,7 +91,7 @@ export default function SeatSelector() {
 
             <ContainerCircle>
                 {request ? (
-                    request.seats.map((seats, index) => (<SeatSelectorJSX key={index} id={seats.id} name={seats.name} isAvailable={seats.isAvailable} />))
+                    request.seats.map((seats, index) => (<SeatSelectorJSX key={index} id={seats.id} name={seats.name} isAvailable={seats.isAvailable} allSelected={allSelected} setAllSelected={setAllSelected} />))
                 ) : (
                     <Loading>
                         <img src={loadingCat} alt="loading" />
@@ -55,14 +107,14 @@ export default function SeatSelector() {
             </DisplayInfo>
 
             <Form>
-                <form>
+                <form onSubmit={handleForm}>
                     <label htmlFor="name">Nome do comprador: </label>
-                    <input type="text" id="name" placeholder="Digite seu nome..." required></input>
+                    <input type="text" id="name" placeholder="Digite seu nome..." value={name} onChange={(e) => { setName(e.target.value) }} required></input>
 
                     <label htmlFor="cpf">CPF do comprador: </label>
-                    <input type="text" id="cpf" placeholder="Digite seu CPF..." required></input>
+                    <input type="text" id="cpf" placeholder="Digite seu CPF..." value={CPF} onChange={(e) => { setCPF(e.target.value) }} required></input>
 
-                    <ContainerButton><Link to={`/Success`} ><Button>Reservar assento(s)</Button></Link></ContainerButton>
+                    <ContainerButton><Button type="submit">Reservar assento(s)</Button></ContainerButton>
                 </form>
             </Form>
 
@@ -198,7 +250,7 @@ const ContainerButton = styled.div`
     justify-content: center;
 `;
 
-const Button = styled.div`
+const Button = styled.button`
     display: flex;
     justify-content: center;
     margin: 30px 0px 0px 0px;
@@ -216,6 +268,7 @@ const Button = styled.div`
     text-align: center;
     letter-spacing: 0.04em;
     color: #FFFFFF;
+    border: none;
 `;
 
 const ContainerCircle = styled.div`
@@ -254,7 +307,13 @@ const ContainerCircle = styled.div`
     }
 
     .unavailable {
-        background-color: #FBE192;;
+        background: #FBE192;
+        border: 1px solid #F7C52B;
+    }
+
+    .selected {
+        background: #8DD7CF;
+        border: 1px solid #45BDB0;
     }
 
 `;
